@@ -1,3 +1,6 @@
+import { sendMessage, setLocalStorage } from './utils.js';
+import { PRODUCT_PANEL } from './messageTypes.js';
+
 function removeTagsFromElement(element, tagsToRemove) {
   const clonedElement = element.cloneNode(true);
   tagsToRemove.forEach(tag => {
@@ -9,17 +12,17 @@ function removeTagsFromElement(element, tagsToRemove) {
 
 function sendProductPanel() {
   const productPanel = document.getElementById('productPanel');
-  if (!productPanel) return;
-
-  console.log("About to send message from contentScript.js");
+  if (!productPanel) {
+    return;
+  }
 
   const tagsToRemove = ['img', 'line', 'polyline', 'svg'];
   const cleanedProductPanel = removeTagsFromElement(productPanel, tagsToRemove);
 
   const productPanelContent = cleanedProductPanel.innerText;
+  setLocalStorage("productPanelContent", productPanelContent);
 
-  chrome.runtime.sendMessage({ type: 'PRODUCT_PANEL', content: productPanelContent });
-  console.log("Message sent from contentScript.js");
+  sendMessage({ type: PRODUCT_PANEL, content: productPanelContent });
 }
 
 sendProductPanel();

@@ -1,6 +1,5 @@
 import { sendMessage, setLocalStorage, getLocalStorage } from './utils.js';
 import { GET_PRODUCT_PANEL, PRODUCT_PANEL } from './messageTypes.js';
-// import { OpenAI } from "langchain/llms/openai";
 
 document.addEventListener('DOMContentLoaded', () => {
   initProductPanel();
@@ -17,28 +16,46 @@ function initProductPanel() {
   });
 }
 
-function initUserInput() {
+async function initUserInput() {
   console.log('Initializing user input bar...');
-  const existingInput = getLocalStorage('output');
-  if (existingInput) {
-    document.getElementById('displayOutput').innerText = existingInput;
+  
+  const existingOutput = await getLocalStorage('output');
+  if (existingOutput) {
+    document.getElementById('displayOutput').innerText = existingOutput;
   }
 
-  document.getElementById('sendButton').addEventListener('click', () => {
+  document.getElementById('sendButton').addEventListener('click', async () => {
     const userInput = document.getElementById('userInput').value;
-    setLocalStorage('output', userInput);
-    //document.getElementById('displayOutput').innerText = getAnswers();
-    document.getElementById('displayOutput').innerText = userInput;
+    try {
+      const productPanelContent = await getLocalStorage('productPanelContent');
+      const responseText = await getAnswers("given former chat information about the product: " + productPanelContent + existingOutput + " answer my question: " + userInput);
+      const cleanedResponseText = responseText.replace(/^"|"$/g, '');  // Remove starting and ending quotes if present
+      document.getElementById('displayOutput').innerHTML = cleanedResponseText;
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
   });
 }
 
-// async function getAnswers() {
-//   const llm = new OpenAI({
-//     temperature: 0.9,
-//   });
+async function getAnswers(userInput) {
+  try {
+    const response = await fetch(' https://uq5jah82da.execute-api.us-east-1.amazonaws.com/apidev/answers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/plain', 
+      },
+      body: userInput, 
+    });
 
-//   const text = "What would be a good company name for a company that makes colorful socks?";
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
 
-//   const llmResult = await llm.predict(text);
-//   return llmResult;
-// }
+    const data = await response.text(); 
+    setLocalStorage('output', data);
+    return data; 
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+}
