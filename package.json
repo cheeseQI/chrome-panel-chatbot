@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "langchain": "^0.0.162",
+    "resolve-cwd": "^3.0.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  }
+}
