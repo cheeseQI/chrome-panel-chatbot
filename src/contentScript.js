@@ -21,6 +21,7 @@ function sendProductPanel() {
 
   const productPanelContent = cleanedProductPanel.innerText;
   setLocalStorage("productPanelContent", productPanelContent);
+  setLocalStorage("output", "");
 
   sendMessage({ type: PRODUCT_PANEL, content: productPanelContent });
 }

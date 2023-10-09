@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "My test Side Panel Extensions",
-  "description": "Shows how to display the same side panel only on saatva.com using the Side Panel API.",
+  "name": "AI ChatBot For Saatva",
+  "description": "Side Panel ChatBot on saatva.com using the Side Panel API.",
   "version": "1.0",
   "icons": {
     "16": "public/images/icon-16.png",
