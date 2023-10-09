@@ -1,6 +1,6 @@
-import { sendMessage, setLocalStorage } from './utils.js';
-import { PRODUCT_PANEL } from './messageTypes.js';
+import { setLocalStorage } from './utils.js';
 
+// Remove unnecessary tags
 function removeTagsFromElement(element, tagsToRemove) {
   const clonedElement = element.cloneNode(true);
   tagsToRemove.forEach(tag => {
@@ -10,6 +10,7 @@ function removeTagsFromElement(element, tagsToRemove) {
   return clonedElement;
 }
 
+// Send web product information to panel
 function sendProductPanel() {
   const productPanel = document.getElementById('productPanel');
   if (!productPanel) {
@@ -22,8 +23,6 @@ function sendProductPanel() {
   const productPanelContent = cleanedProductPanel.innerText;
   setLocalStorage("productPanelContent", productPanelContent);
   setLocalStorage("output", "");
-
-  sendMessage({ type: PRODUCT_PANEL, content: productPanelContent });
 }
 
 sendProductPanel();

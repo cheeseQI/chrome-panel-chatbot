@@ -4,7 +4,6 @@ module.exports = {
   mode: 'production', // 'production' 'development' or 'none'
   entry: {
     contentScript: './src/contentScript.js',
-    messageTypes: './src/messageTypes.js',
     serviceWorker: './src/service-worker.js',
     sidepanel: './src/sidepanel.js',
     utils: './src/utils.js',

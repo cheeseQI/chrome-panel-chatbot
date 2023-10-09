@@ -1,23 +1,21 @@
 const ORIGIN = 'https://www.saatva.com';
+let currentProductPanelContent = '';
 
-let currentProductPanelContent = ''; 
+// Adding Event Listeners
+chrome.tabs.onUpdated.addListener(handleTabUpdated);
+initializeSidePanel();
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log("received message: " + message.type);
-  if (message.type === 'PRODUCT_PANEL') {
-    currentProductPanelContent = message.content;
-  } else if (message.type === 'GET_PRODUCT_PANEL') {
-    sendResponse({ type: 'PRODUCT_PANEL', content: currentProductPanelContent });
+// Initialize Side Panel function
+async function initializeSidePanel() {
+  try {
+    await chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+  } catch (error) {
+    console.error(error);
   }
-});
-  
+}
 
-// Allows users to open the side panel by clicking on the action toolbar icon
-chrome.sidePanel
-  .setPanelBehavior({ openPanelOnActionClick: true })
-  .catch((error) => console.error(error));
-
-chrome.tabs.onUpdated.addListener(async (tabId, tab) => {
+// Tab Updated Handler function
+async function handleTabUpdated(tabId, tab) {
   if (!tab.url) {
     return;
   }
@@ -30,10 +28,11 @@ chrome.tabs.onUpdated.addListener(async (tabId, tab) => {
       enabled: true
     });
   } else {
-    // Disables the side panel on all other sites
     await chrome.sidePanel.setOptions({
       tabId,
       enabled: false
     });
   }
-});
+}
+
+

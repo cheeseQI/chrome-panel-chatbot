@@ -1,5 +1,6 @@
 import { setLocalStorage, getLocalStorage } from './utils.js';
 
+// Initialize the app when the document is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
   initUserInput();
   shareByEmail();
@@ -23,17 +24,18 @@ async function initUserInput() {
       const existingOutput = await getLocalStorage('output');
       setLocalStorage('output', existingOutput + cleanedResponseText);
       document.getElementById('displayOutput').innerHTML = await getLocalStorage('output');
+      document.getElementById('userInput').value = "";
     } catch (error) {
       console.error('An error occurred:', error);
     }
   });
 }
 
+// Fetch answers based on user input through API
 async function getAnswers(userInput) {
   const productPanelContent = await getLocalStorage('productPanelContent');
   const history = await getLocalStorage('output');
   try {
-    // Create the JSON object
     const requestBody = JSON.stringify({
       "userInput": userInput,
       "productPanelContent": productPanelContent,
@@ -60,6 +62,7 @@ async function getAnswers(userInput) {
   }
 }
 
+// Share gpt generated content by email through API
 async function shareByEmail() {
   document.getElementById('shareButton').addEventListener('click', async () => {
     const email = document.getElementById('emailInput').value;
@@ -95,7 +98,7 @@ async function shareByEmail() {
   });
 }
 
-// format validation
+// Format validation
 function validateEmail(email) {
   const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return re.test(String(email).toLowerCase());

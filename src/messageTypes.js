@@ -1,2 +1,0 @@
-export const GET_PRODUCT_PANEL = 'GET_PRODUCT_PANEL';
-export const PRODUCT_PANEL = 'PRODUCT_PANEL';
